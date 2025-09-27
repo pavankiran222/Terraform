@@ -158,9 +158,9 @@ For project validation, you can take screenshots of:
 3. Architecture Diagram (you can create using draw.io or AWS diagrams)
    ![Architecture](architecture.png)
 
-### Automated Deployment (CI/CD)
+### Manual Workflow Deployment
 
-This project includes a GitHub Actions workflow that automatically runs Terraform commands when changes are pushed to the repository.
+This project includes a GitHub Actions workflow that can be manually triggered to manage your infrastructure.
 
 1. Configure GitHub Secrets:
    - Go to your GitHub repository → Settings → Secrets and Variables → Actions
@@ -168,19 +168,24 @@ This project includes a GitHub Actions workflow that automatically runs Terrafor
      - `AWS_ACCESS_KEY_ID`: Your AWS access key
      - `AWS_SECRET_ACCESS_KEY`: Your AWS secret key
 
-2. The workflow will automatically:
-   - Run on pushes to main branch
-   - Run on pull requests to main branch
-   - Can be manually triggered from the Actions tab
+2. To run the workflow:
+   - Go to your repository's Actions tab
+   - Select "Terraform CI/CD" workflow
+   - Click "Run workflow"
+   - Choose one of the following actions:
+     - `plan`: Preview changes without applying
+     - `apply`: Apply infrastructure changes
+     - `destroy`: Destroy infrastructure
 
-The pipeline performs the following steps:
+The workflow performs these steps:
 1. Checks out the code
 2. Configures AWS credentials
 3. Sets up Terraform
 4. Formats and validates the code
-5. Runs terraform plan
-6. On main branch pushes, automatically applies the changes
-7. On pull requests, comments with the plan output
+5. Based on your selection:
+   - Shows the plan for review
+   - Applies the infrastructure changes
+   - Destroys the infrastructure
 
 ### Workflow Status
 [![Terraform CI/CD](https://github.com/pavankiran222/Terraform/actions/workflows/terraform.yml/badge.svg)](https://github.com/pavankiran222/Terraform/actions/workflows/terraform.yml)
