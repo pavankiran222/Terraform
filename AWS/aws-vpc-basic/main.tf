@@ -2,8 +2,8 @@
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
   tags = {
-    Name = "terraform_vpc" 
-    }
+    Name = "terraform_vpc"
+  }
 }
 
 # Create an Internet Gateway
@@ -11,7 +11,7 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
   tags = {
     Name = "terraform_igw"
-    }
+  }
 }
 
 # Create a Public Subnet
@@ -22,7 +22,7 @@ resource "aws_subnet" "public" {
   availability_zone = "us-east-2a"
   tags = {
     Name = "terraform_public_subnet"
-    }
+  }
 }
 
 # Create a Private Subnet
@@ -32,19 +32,19 @@ resource "aws_subnet" "private" {
   availability_zone = "us-east-2b"
   tags = {
     Name = "terraform_private_subnet"
-    }
+  }
 }
 
 # Create a Route Table
 resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.main.id
-    route {
-        cidr_block = "0.0.0.0/0"
-        gateway_id = aws_internet_gateway.igw.id
-    }
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
   tags = {
     Name = "terraform_public_rt"
-    }
+  }
 }
 
 # Associate the Route Table with the Public Subnet
@@ -57,7 +57,7 @@ resource "aws_route_table_association" "public_assoc" {
 resource "aws_eip" "nat_eip" {
   tags = {
     Name = "terraform_nat_eip"
-    }
+  }
 }
 
 resource "aws_nat_gateway" "nat_gw" {
@@ -65,20 +65,20 @@ resource "aws_nat_gateway" "nat_gw" {
   subnet_id     = aws_subnet.public.id
   tags = {
     Name = "terraform_nat_gw"
-    }
+  }
   depends_on = [aws_internet_gateway.igw]
 }
 
 # Create a Route Table for Private Subnet
 resource "aws_route_table" "private_rt" {
   vpc_id = aws_vpc.main.id
-    route {
-        cidr_block = "0.0.0.0/0"
-        nat_gateway_id = aws_nat_gateway.nat_gw.id
-    }
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat_gw.id
+  }
   tags = {
     Name = "terraform_private_rt"
-    }
+  }
 }
 
 # Associate the Route Table with the Private Subnet
