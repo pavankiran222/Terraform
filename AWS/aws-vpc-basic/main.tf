@@ -16,10 +16,10 @@ resource "aws_internet_gateway" "igw" {
 
 # Create a Public Subnet
 resource "aws_subnet" "public" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.1.0/24"
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
-  availability_zone = "us-east-2a"
+  availability_zone       = "us-east-2a"
   tags = {
     Name = "terraform_public_subnet"
   }
@@ -51,7 +51,7 @@ resource "aws_route_table" "public_rt" {
 resource "aws_route_table_association" "public_assoc" {
   subnet_id      = aws_subnet.public.id
   route_table_id = aws_route_table.public_rt.id
-}   
+}
 
 # NAT Gateway in Public Subnet
 resource "aws_eip" "nat_eip" {
@@ -73,7 +73,7 @@ resource "aws_nat_gateway" "nat_gw" {
 resource "aws_route_table" "private_rt" {
   vpc_id = aws_vpc.main.id
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat_gw.id
   }
   tags = {
@@ -85,7 +85,7 @@ resource "aws_route_table" "private_rt" {
 resource "aws_route_table_association" "private_assoc" {
   subnet_id      = aws_subnet.private.id
   route_table_id = aws_route_table.private_rt.id
-}   
+}
 
 # Create a Security Group for SSH access
 resource "aws_security_group" "allow_ssh" {
@@ -121,12 +121,12 @@ resource "aws_key_pair" "ssh_key" {
 
 # Launch an EC2 instance
 resource "aws_instance" "web" {
-  ami           = "ami-0ee4f2271a4df2d7d"  # Amazon Linux 2023 AMI in us-east-2
+  ami           = "ami-0ee4f2271a4df2d7d" # Amazon Linux 2023 AMI in us-east-2
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.public.id
-  
+
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
-  key_name              = aws_key_pair.ssh_key.key_name
+  key_name               = aws_key_pair.ssh_key.key_name
 
   tags = {
     Name = "terraform_ec2"
@@ -135,12 +135,12 @@ resource "aws_instance" "web" {
 
 # Output the public IP of the instance
 output "instance_public_ip" {
-  value = aws_instance.web.public_ip
+  value       = aws_instance.web.public_ip
   description = "The public IP address of the EC2 instance"
 }
 
 # Output the SSH command
 output "ssh_command" {
-  value = "ssh -i ~/.ssh/terraform_key ec2-user@${aws_instance.web.public_ip}"
+  value       = "ssh -i ~/.ssh/terraform_key ec2-user@${aws_instance.web.public_ip}"
   description = "Command to SSH into the EC2 instance"
 }
