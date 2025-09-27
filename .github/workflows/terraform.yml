@@ -52,7 +52,12 @@ jobs:
 
     - name: Terraform Init
       id: init
-      run: terraform init
+      run: |
+        terraform init \
+          -backend-config="bucket=terraform-state-pavankiran222" \
+          -backend-config="key=aws-vpc-basic/terraform.tfstate" \
+          -backend-config="region=us-east-2" \
+          -backend-config="dynamodb_table=terraform-state-lock"
 
     - name: Terraform Validate
       id: validate
