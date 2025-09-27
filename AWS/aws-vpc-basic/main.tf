@@ -116,8 +116,7 @@ resource "aws_security_group" "allow_ssh" {
 # Create a Key Pair for SSH access
 resource "aws_key_pair" "ssh_key" {
   key_name   = "terraform_ssh_key"
-  # Generate a key pair locally using: ssh-keygen -t rsa -b 2048 -f ~/.ssh/terraform_key -N ""
-  public_key = file("~/.ssh/terraform_key.pub")
+  public_key = var.ssh_public_key
 }
 
 # Launch an EC2 instance
