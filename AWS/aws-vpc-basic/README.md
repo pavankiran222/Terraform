@@ -109,7 +109,7 @@ aws-vpc-basic/
 
 ## Deployment Instructions
 
-1. Clone this repository:
+### Manual Deployment
 ```bash
 git clone https://github.com/pavankiran222/Terraform.git
 cd Terraform/AWS/aws-vpc-basic
@@ -158,9 +158,38 @@ For project validation, you can take screenshots of:
 3. Architecture Diagram (you can create using draw.io or AWS diagrams)
    ![Architecture](architecture.png)
 
+### Automated Deployment (CI/CD)
+
+This project includes a GitHub Actions workflow that automatically runs Terraform commands when changes are pushed to the repository.
+
+1. Configure GitHub Secrets:
+   - Go to your GitHub repository → Settings → Secrets and Variables → Actions
+   - Add the following secrets:
+     - `AWS_ACCESS_KEY_ID`: Your AWS access key
+     - `AWS_SECRET_ACCESS_KEY`: Your AWS secret key
+
+2. The workflow will automatically:
+   - Run on pushes to main branch
+   - Run on pull requests to main branch
+   - Can be manually triggered from the Actions tab
+
+The pipeline performs the following steps:
+1. Checks out the code
+2. Configures AWS credentials
+3. Sets up Terraform
+4. Formats and validates the code
+5. Runs terraform plan
+6. On main branch pushes, automatically applies the changes
+7. On pull requests, comments with the plan output
+
+### Workflow Status
+[![Terraform CI/CD](https://github.com/pavankiran222/Terraform/actions/workflows/terraform.yml/badge.svg)](https://github.com/pavankiran222/Terraform/actions/workflows/terraform.yml)
+
 ## Clean Up
 
 To avoid AWS charges, destroy the infrastructure when not in use:
+
+### Manual Cleanup
 ```bash
 terraform destroy
 ```
